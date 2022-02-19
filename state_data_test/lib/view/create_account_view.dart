@@ -7,6 +7,7 @@ import 'package:state_data_test/component/gender_card.dart';
 import 'package:state_data_test/constant/color_property.dart';
 import 'package:state_data_test/constant/gender.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:email_validator/email_validator.dart';
 
 class CreateAccountView extends StatefulWidget {
   const CreateAccountView({Key? key}) : super(key: key);
@@ -26,14 +27,103 @@ class _CreateAccountViewState extends State<CreateAccountView> {
 
   Gender selectedGender = Gender.female;
 
+  bool isInvalidFirstName = false;
+  bool isInvalidLastName = false;
+  bool isInvalidEmail = false;
+  bool isInvalidDob = false;
+  bool isInvalidNationality = false;
+  bool isInvalidCountry = false;
+
+  String firstNameErrorText = 'Enter first name';
+  String lastNameErrorText = 'Enter last name';
+  String emailErrorText = 'Enter email address';
+  String dobErrorText = 'Choose date of birth';
+  String nationalityErrorText = 'Enter nationality';
+  String countryErrorText = 'Enter country of residence';
+
+  String defaultDobHint = 'DD/MM/YYYY';
+
   _initiateTextFieldValue() {
-    birthdayController.text = 'DD/MM/YYYY';
+    birthdayController.text = defaultDobHint;
   }
 
   _selectGender(Gender gender) {
     setState(() {
       selectedGender = gender;
     });
+  }
+
+  _createAccount(
+      {required String firstName,
+      required String lastName,
+      required String email,
+      required String dob,
+      required String gender,
+      required String nationality,
+      required String country,
+      required String phone}) {
+    setState(() {
+      isInvalidFirstName = firstName.isEmpty ? true : false;
+      isInvalidLastName = lastName.isEmpty ? true : false;
+      isInvalidDob = dob == defaultDobHint ? true : false;
+      isInvalidNationality = nationality.isEmpty ? true : false;
+      isInvalidCountry = country.isEmpty ? true : false;
+      // check email validation
+      if (email.isEmpty) {
+        isInvalidEmail = true;
+        emailErrorText = 'Enter email address';
+      } else {
+        isInvalidEmail = !EmailValidator.validate(email);
+        if (isInvalidEmail) {
+          emailErrorText = 'Invalid email format';
+        } else {
+          isInvalidEmail = false;
+        }
+      }
+    });
+
+    if (!isInvalidFirstName &&
+        !isInvalidLastName &&
+        !isInvalidEmail &&
+        !isInvalidDob &&
+        !isInvalidNationality &&
+        !isInvalidCountry) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Create account success')),
+      );
+      _clearTextField();
+    }
+  }
+
+  _clearTextField() {
+    firstNameController.clear();
+    lastNameController.clear();
+    emailController.clear();
+    birthdayController.clear();
+    nationalityController.clear();
+    countryController.clear();
+    mobileController.clear();
+  }
+
+  _pickDate() async {
+    DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(DateTime.now().year + 2),
+        selectableDayPredicate: (date) {
+          if (date.month <= DateTime.now().month) {
+            return true;
+          } else {
+            return false;
+          }
+        });
+    if (pickedDate != null) {
+      String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
+      setState(() {
+        birthdayController.text = formattedDate;
+      });
+    }
   }
 
   @override
@@ -109,27 +199,29 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: TextField(
                   controller: firstNameController,
-                  decoration: const InputDecoration(
-                    labelText: 'First Name *',
-                  ),
+                  decoration: InputDecoration(
+                      labelText: 'First Name *',
+                      errorText:
+                          isInvalidFirstName ? firstNameErrorText : null),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8, left: 20, right: 20),
                 child: TextField(
                   controller: lastNameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Last Name *',
-                  ),
+                  decoration: InputDecoration(
+                      labelText: 'Last Name *',
+                      errorText: isInvalidLastName ? lastNameErrorText : null),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8, left: 20, right: 20),
                 child: TextField(
                   controller: emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email Address *',
-                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                      labelText: 'Email Address *',
+                      errorText: isInvalidEmail ? emailErrorText : null),
                 ),
               ),
               Padding(
@@ -141,23 +233,13 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                       flex: 2,
                       child: TextField(
                         onTap: () async {
-                          DateTime? pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2000),
-                              lastDate: DateTime(2101));
-                          if (pickedDate != null) {
-                            String formattedDate =
-                                DateFormat('DD/MM/yyyy').format(pickedDate);
-                            setState(() {
-                              birthdayController.text = formattedDate;
-                            });
-                          }
+                          await _pickDate();
                         },
                         controller: birthdayController,
                         readOnly: true,
                         decoration: InputDecoration(
                             labelText: 'Date of Birth *',
+                            errorText: isInvalidDob ? dobErrorText : null,
                             suffixIcon: Image.asset(
                               'assets/images/dob.png',
                               width: 10,
@@ -195,18 +277,19 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                 padding: const EdgeInsets.only(top: 8, left: 20, right: 20),
                 child: TextField(
                   controller: nationalityController,
-                  decoration: const InputDecoration(
-                    labelText: 'Nationality *',
-                  ),
+                  decoration: InputDecoration(
+                      labelText: 'Nationality *',
+                      errorText:
+                          isInvalidNationality ? nationalityErrorText : null),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8, left: 20, right: 20),
                 child: TextField(
                   controller: countryController,
-                  decoration: const InputDecoration(
-                    labelText: 'Country of Residence *',
-                  ),
+                  decoration: InputDecoration(
+                      labelText: 'Country of Residence *',
+                      errorText: isInvalidCountry ? countryErrorText : null),
                 ),
               ),
               Padding(
@@ -232,7 +315,15 @@ class _CreateAccountViewState extends State<CreateAccountView> {
           alignment: FractionalOffset.bottomCenter,
           child: AccountButton(
             title: 'Create my account now',
-            onPressed: () {},
+            onPressed: () => _createAccount(
+                firstName: firstNameController.text,
+                lastName: lastNameController.text,
+                email: emailController.text,
+                dob: birthdayController.text,
+                gender: selectedGender.toShortString(),
+                nationality: nationalityController.text,
+                country: countryController.text,
+                phone: mobileController.text),
           ),
         )
       ]),
