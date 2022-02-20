@@ -65,7 +65,7 @@ class WelcomeView extends StatelessWidget {
                         ),
                       )),
                   Positioned(
-                      top: 30.h, left: 10.w, child: const Icon(Icons.close)),
+                      top: 40.h, left: 10.w, child: const Icon(Icons.close)),
                   Positioned(
                     top: 340.h,
                     left: 30.w,
@@ -87,28 +87,30 @@ class WelcomeView extends StatelessWidget {
                   ),
                   Align(
                     alignment: FractionalOffset.bottomCenter,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        loginButton(
-                            title: 'Log in with Facebook',
-                            faIcon:
-                                const FaIcon(FontAwesomeIcons.facebookSquare)),
-                        loginButton(
-                          title: 'Log in with email address',
-                        ),
-                        AccountButton(
-                          title: 'Create a new account',
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const CreateAccountView()),
-                            );
-                          },
-                        ),
-                      ],
+                    child: SafeArea(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          loginButton(
+                              title: 'Log in with Facebook',
+                              faIcon: const FaIcon(
+                                  FontAwesomeIcons.facebookSquare)),
+                          loginButton(
+                            title: 'Log in with email address',
+                          ),
+                          AccountButton(
+                            title: 'Create a new account',
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CreateAccountView()),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   )
                 ],

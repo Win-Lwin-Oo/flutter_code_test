@@ -184,7 +184,7 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                 ),
               ),
               Positioned(
-                  top: 40,
+                  top: 40.h,
                   left: 15,
                   child: GestureDetector(
                       onTap: () => Navigator.pop(context),
