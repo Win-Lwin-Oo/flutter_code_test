@@ -18,7 +18,7 @@ class MovieDetailView extends GetView<MovieDetailController> {
             child: Stack(
               children: [
                 Hero(
-                  tag: Get.arguments['heroTag'],
+                  tag: Get.arguments['id'],
                   child: SizedBox(
                     width: double.infinity,
                     height: 400,
@@ -61,18 +61,38 @@ class MovieDetailView extends GetView<MovieDetailController> {
                   height: 60,
                   top: 360.h,
                   left: 320.w,
-                  child: Card(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(150),
-                    ),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
+                  child: GestureDetector(
+                    onTap: () async {
+                      String movieType = Get.arguments['movieType'];
+                      int id = int.parse(Get.arguments['id']);
+                      int favourite = Get.arguments['favourite'];
+                      if (movieType == 'upcomming') {
+                        await controller.homeController
+                            .updateUpcommingFavourite(id, favourite,
+                                fromDetail: controller
+                                    .homeController.isFavourite.value);
+                      } else if (movieType == 'popular') {
+                        await controller.homeController.updatePopularFavourite(
+                            id, favourite,
+                            fromDetail:
+                                controller.homeController.isFavourite.value);
+                      }
+                    },
+                    child: Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(150),
                       ),
-                      child: Icon(
-                        CupertinoIcons.heart,
-                        color: Colors.pink,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                        ),
+                        child: Obx(() => Icon(
+                              !controller.homeController.isFavourite.value
+                                  ? CupertinoIcons.heart
+                                  : CupertinoIcons.heart_fill,
+                              color: Colors.pink,
+                            )),
                       ),
                     ),
                   ),

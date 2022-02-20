@@ -1,9 +1,9 @@
+import 'package:code_manage_test/app/controllers/home_controller.dart';
 import 'package:get/get.dart';
 
 class MovieDetailController extends GetxController {
-  //TODO: Implement MovieDetailController
+  final homeController = Get.find<HomeController>();
 
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
@@ -16,5 +16,4 @@ class MovieDetailController extends GetxController {
 
   @override
   void onClose() {}
-  void increment() => count.value++;
 }

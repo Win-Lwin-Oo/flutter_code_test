@@ -1,8 +1,10 @@
+import 'package:code_manage_test/app/models/local_movie_model.dart';
 import 'package:code_manage_test/app/models/movie_model.dart';
 import 'package:code_manage_test/app/routes/app_pages.dart';
 import 'package:code_manage_test/app/views/component/popular_list_item.dart';
 import 'package:code_manage_test/constant/desire_screen_size.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
@@ -13,6 +15,8 @@ import 'component/upcomming_list_item.dart';
 class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return ScreenUtilInit(
         designSize: const Size(DESIRE_WIDTH, DESIRE_HEIGHT),
         builder: () => Scaffold(
@@ -41,26 +45,42 @@ class HomeView extends GetView<HomeController> {
                                       child: ListView.builder(
                                           scrollDirection: Axis.horizontal,
                                           itemCount: controller
-                                              .popularMovieList.length,
+                                              .localPopularMovieList.length,
                                           itemBuilder: (context, index) {
-                                            Movie popularMovie = controller
-                                                .popularMovieList[index];
+                                            LocalMovie popularMovie = controller
+                                                .localPopularMovieList[index];
                                             return PopularListItem(
                                               id: popularMovie.id!,
                                               title: popularMovie.title!,
+                                              isFavourite:
+                                                  popularMovie.favourite!,
                                               image: popularMovie.posterPath!,
                                               onTap: () {
+                                                controller.isFavourite.value =
+                                                    popularMovie.favourite! == 0
+                                                        ? false
+                                                        : true;
                                                 Get.toNamed(Routes.MOVIE_DETAIL,
                                                     arguments: {
+                                                      'movieType': 'popular',
                                                       'image': popularMovie
                                                           .posterPath!,
                                                       'title':
                                                           popularMovie.title!,
                                                       'overview': popularMovie
                                                           .overview!,
-                                                      'heroTag':
-                                                          'img_${popularMovie.id!}'
+                                                      'favourite': popularMovie
+                                                          .favourite!,
+                                                      'id':
+                                                          '${popularMovie.id!}'
                                                     });
+                                              },
+                                              updateFavourite: () async {
+                                                await controller
+                                                    .updatePopularFavourite(
+                                                        popularMovie.id!,
+                                                        popularMovie
+                                                            .favourite!);
                                               },
                                             );
                                           }),
@@ -90,28 +110,48 @@ class HomeView extends GetView<HomeController> {
                                   : Flexible(
                                       child: ListView.builder(
                                           itemCount: controller
-                                              .upcomingMovieList.length,
+                                              .localUpcommingMovieList.length,
                                           itemBuilder: (context, index) {
-                                            Movie upcommingMovie = controller
-                                                .upcomingMovieList[index];
+                                            LocalMovie upcommingMovie =
+                                                controller
+                                                        .localUpcommingMovieList[
+                                                    index];
                                             return UpcommingListItem(
                                               id: upcommingMovie.id!,
+                                              isFavourite:
+                                                  upcommingMovie.favourite!,
                                               title: upcommingMovie.title!,
                                               image: upcommingMovie.posterPath!,
                                               overview:
                                                   upcommingMovie.overview!,
                                               onTap: () {
+                                                controller.isFavourite.value =
+                                                    upcommingMovie.favourite! ==
+                                                            0
+                                                        ? false
+                                                        : true;
                                                 Get.toNamed(Routes.MOVIE_DETAIL,
                                                     arguments: {
+                                                      'movieType': 'upcomming',
                                                       'image': upcommingMovie
                                                           .posterPath!,
                                                       'title':
                                                           upcommingMovie.title!,
                                                       'overview': upcommingMovie
                                                           .overview!,
-                                                      'heroTag':
-                                                          'img_${upcommingMovie.id!}'
+                                                      'favourite':
+                                                          upcommingMovie
+                                                              .favourite!,
+                                                      'id':
+                                                          '${upcommingMovie.id!}'
                                                     });
+                                              },
+                                              updateFavourite: () async {
+                                                await controller
+                                                    .updateUpcommingFavourite(
+                                                        upcommingMovie.id!,
+                                                        upcommingMovie
+                                                            .favourite!);
                                               },
                                             );
                                           }),

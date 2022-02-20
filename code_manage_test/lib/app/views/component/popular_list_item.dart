@@ -9,13 +9,17 @@ class PopularListItem extends StatelessWidget {
       required this.title,
       required this.image,
       this.onTap,
+      this.updateFavourite,
+      required this.isFavourite,
       required this.id})
       : super(key: key);
 
   final int id;
   final String title;
   final String image;
+  final int isFavourite;
   final Function()? onTap;
+  final Function()? updateFavourite;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -26,7 +30,7 @@ class PopularListItem extends StatelessWidget {
         child: Card(
           child: Column(children: [
             Hero(
-              tag: 'img_$id',
+              tag: '$id',
               child: SizedBox(
                 width: 130,
                 height: 130,
@@ -50,7 +54,19 @@ class PopularListItem extends StatelessWidget {
             const SizedBox(
               height: 5,
             ),
-            const Icon(CupertinoIcons.heart)
+            Flexible(
+              child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: GestureDetector(
+                    onTap: updateFavourite,
+                    child: Icon(
+                      isFavourite == 0
+                          ? CupertinoIcons.heart
+                          : CupertinoIcons.heart_fill,
+                      color: Colors.pink,
+                    ),
+                  )),
+            ),
           ]),
         ),
       ),

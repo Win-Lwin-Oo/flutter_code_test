@@ -8,16 +8,20 @@ class UpcommingListItem extends StatelessWidget {
       {Key? key,
       required this.title,
       required this.id,
+      required this.isFavourite,
       this.onTap,
+      this.updateFavourite,
       required this.image,
       required this.overview})
       : super(key: key);
 
   final int id;
+  final int isFavourite;
   final String image;
   final String title;
   final String overview;
   final Function()? onTap;
+  final Function()? updateFavourite;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +36,7 @@ class UpcommingListItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Hero(
-                    tag: 'img_$id',
+                    tag: '$id',
                     child: Container(
                       width: 100,
                       height: 150,
@@ -72,7 +76,15 @@ class UpcommingListItem extends StatelessWidget {
                       const SizedBox(
                         height: 10,
                       ),
-                      const Icon(CupertinoIcons.heart)
+                      GestureDetector(
+                        onTap: updateFavourite,
+                        child: Icon(
+                          isFavourite == 0
+                              ? CupertinoIcons.heart
+                              : CupertinoIcons.heart_fill,
+                          color: Colors.pink,
+                        ),
+                      )
                     ],
                   )),
                 ],
