@@ -12,6 +12,10 @@ Home Page             |  Detail Page
 <img src="https://github.com/Win-Lwin-Oo/flutter_code_test/blob/master/test22.png" width="390" height="844" /> | <img src="https://github.com/Win-Lwin-Oo/flutter_code_test/blob/master/test21.png" width="390" height="844" />
 
 ## [Test Three](https://github.com/Win-Lwin-Oo/flutter_code_test/tree/master/ui_test)
-Test Record             |By Room             |  By Rates
-:-------------------------:|:-------------------------:|:-------------------------:
-<img src="https://github.com/Win-Lwin-Oo/flutter_code_test/blob/master/ui_test_gif.gif" width="390" height="844" /> |<img src="https://github.com/Win-Lwin-Oo/flutter_code_test/blob/master/ui_test31.png" width="390" height="844" /> | <img src="https://github.com/Win-Lwin-Oo/flutter_code_test/blob/master/ui_32.png" width="390" height="844" />
+|Test Record             |
+|:-------------------------:|
+|<img src="https://github.com/Win-Lwin-Oo/flutter_code_test/blob/master/ui_test_gif.gif" width="390" height="844" /> |
+
+By Room             |  By Rates
+:-------------------------:|:-------------------------:
+<img src="https://github.com/Win-Lwin-Oo/flutter_code_test/blob/master/ui_test31.png" width="390" height="844" /> | <img src="https://github.com/Win-Lwin-Oo/flutter_code_test/blob/master/ui_32.png" width="390" height="844" />
