@@ -8,7 +8,7 @@ class ImageCarosel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CarouselSlider(
-      options: CarouselOptions(height: 200.h, autoPlay: false),
+      options: CarouselOptions(height: 200.h, autoPlay: true),
       items: imageList
           .map((item) => SizedBox(
                 child: Center(
